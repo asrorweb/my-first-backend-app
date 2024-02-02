@@ -15,8 +15,8 @@ app.use("/api", blogRouter);
 connectToDatabase();
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const port = process.env.PORT || 8008;
+app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
 });
 export default app;
