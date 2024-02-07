@@ -10,6 +10,17 @@ export const getAllBlogs = async (req, res) => {
     }
 };
 
+export const getBlogByID = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const blog = await BlogModel.findById(id);
+        if (!blog) return res.status(404).json({ message: "blog not found" });
+        return res.status(200).json(blog);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
 export const createBlogs = async (req, res) => {
     try {
         const { title, desc } = req.body;
@@ -17,7 +28,7 @@ export const createBlogs = async (req, res) => {
         const newBlog = new BlogModel({
             title,
             desc,
-            author: [{ userId, email }],
+            author: { userId, email },
         });
         await newBlog.save();
 
@@ -86,13 +97,12 @@ export const deleteBlogs = async (req, res) => {
         );
 
         if (!findUserAndDeleteBlog)
-            return res.status(200).json({
+            return res.status(404).json({
                 massage: "Blog user malumotlarida o'chirishda xatolik xatolik",
             });
 
         return res.status(200).json({
             message: "Document deleted successfully",
-            deletedBlog,
         });
     } catch (error) {
         console.log(error);
